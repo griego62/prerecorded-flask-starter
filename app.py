@@ -72,6 +72,14 @@ def json_abort(message):
     print(message)
     return abort(make_response(jsonify(err=str(message)), 500))
 
+@app.route('/download-srt/<filename>')
+def download_srt(filename):
+    try:
+        srt_path = os.path.join(tempfile.gettempdir(), filename)
+        return send_file(srt_path, as_attachment=True)
+    except Exception as e:
+        return jsonify({'error': f'Download failed: {str(e)}'}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True)
